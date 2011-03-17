@@ -20,3 +20,12 @@ Getting a cached avatar from the plug-in store
 
     Avatar avatar = AvatarPlugin.getDefault().getAvatars().getAvatarByEmail("name@example.com");
     Image image = avatar.getImage();
+
+Creating a table viewer with Gravatar images
+------
+
+    TableViewer viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+    viewer.setContentProvider(new ArrayContentProvider());
+    viewer.setLabelProvider(new AvatarLabelProvider(viewer));
+    //Replace with a valid e-mail address
+    viewer.setInput(new Object[] { "test@example.com" });
