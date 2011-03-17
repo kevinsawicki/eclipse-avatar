@@ -28,4 +28,4 @@ Creating a table viewer with Gravatar images
     viewer.setContentProvider(new ArrayContentProvider());
     viewer.setLabelProvider(new AvatarLabelProvider(viewer));
     //Replace with a valid e-mail address
-    viewer.setInput(new Object[] { "test@example.com" });
+    viewer.setInput(new Object[] { "name@example.com" });
