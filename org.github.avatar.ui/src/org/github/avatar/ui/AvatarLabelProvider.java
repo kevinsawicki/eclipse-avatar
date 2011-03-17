@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.github.avatar;
+package org.github.avatar.ui;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ITableLabelProvider;

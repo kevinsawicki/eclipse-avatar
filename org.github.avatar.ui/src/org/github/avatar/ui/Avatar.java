@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.github.avatar;
+package org.github.avatar.ui;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

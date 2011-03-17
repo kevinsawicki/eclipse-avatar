@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.github.avatar;
+package org.github.avatar.ui;
 
 /**
  * @author Kevin Sawicki (kevin@github.com)

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.github.avatar;
+package org.github.avatar.ui;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -10,7 +10,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.github.avatar.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.github.avatar.ui.messages"; //$NON-NLS-1$
 
 	/**
 	 * AvatarStore_LoadingAvatar

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.github.avatar;
+package org.github.avatar.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.WorkbenchAdapter;

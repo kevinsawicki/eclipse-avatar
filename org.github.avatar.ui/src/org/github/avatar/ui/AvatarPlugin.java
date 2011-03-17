@@ -1,4 +1,4 @@
-package org.github.avatar;
+package org.github.avatar.ui;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +23,7 @@ public class AvatarPlugin extends AbstractUIPlugin {
 	/**
 	 * The plug-in ID
 	 */
-	public static final String PLUGIN_ID = "org.github.avatar"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.github.avatar.ui"; //$NON-NLS-1$
 
 	/**
 	 * STORE_NAME
