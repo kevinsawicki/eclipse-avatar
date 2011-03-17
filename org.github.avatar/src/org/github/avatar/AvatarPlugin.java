@@ -15,7 +15,8 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
+ * Avatar plug-in that contains a persistent {@link AvatarStore} instance
+ * available for use.
  */
 public class AvatarPlugin extends AbstractUIPlugin {
 
