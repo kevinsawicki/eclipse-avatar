@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Avatar Plug-in
+Bundle-SymbolicName: org.github.avatar
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.github.avatar.AvatarPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.github.avatar
+Bundle-Vendor: GitHub Inc.
