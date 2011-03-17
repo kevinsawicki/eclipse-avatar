@@ -43,6 +43,11 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	public static final int HASH_LENGTH = 32;
 
 	/**
+	 * TIMEOUT
+	 */
+	public static final int TIMEOUT = 30 * 1000;
+
+	/**
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 6084425297832914970L;
@@ -146,6 +151,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 		}
 		Avatar avatar = null;
 		URLConnection connection = new URL(URL + hash).openConnection();
+		connection.setConnectTimeout(TIMEOUT);
 		ImageLoader loader = new ImageLoader();
 		ImageData[] images = loader.load(connection.getInputStream());
 		if (images.length > 0) {
