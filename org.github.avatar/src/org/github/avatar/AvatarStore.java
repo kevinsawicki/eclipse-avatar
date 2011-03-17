@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -208,6 +209,25 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 			}
 		}
 		return hash;
+	}
+
+	/**
+	 * Get hash for object by attempting to adapt it to a
+	 * {@link IAvatarHashProvider} and fall back on {@link Object#toString()}
+	 * value if adaptation fails.
+	 * 
+	 * @param element
+	 * @return hash
+	 */
+	public String getAdaptedHash(Object element) {
+		IAvatarHashProvider provider = null;
+		if (element instanceof IAvatarHashProvider) {
+			provider = (IAvatarHashProvider) element;
+		} else if (element instanceof IAdaptable) {
+			provider = (IAvatarHashProvider) ((IAdaptable) element)
+					.getAdapter(IAvatarHashProvider.class);
+		}
+		return provider != null ? provider.getAvatarHash() : element.toString();
 	}
 
 	/**
