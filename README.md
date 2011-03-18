@@ -4,7 +4,7 @@ Eclipse Gravatar Plug-in
 This is a plug-in to add Gravatar support to Eclipse.
 
 The org.avatar.github plug-in contains a persistent store of fetched Gravatar images
-that can be used directly to get Image/ImageData instance for a specific hash or e-mail address.
+that can be used directly to get Image/ImageData instances for a specific hash or e-mail address.
 
 This plug-in also contains LabelProvider and WorkbenchAdapter classes that provide images for
 objects that can provide a hash.
