@@ -15,9 +15,15 @@ import org.eclipse.ui.PlatformUI;
 public class AvatarLabelProvider extends LabelProvider implements
 		ITableLabelProvider {
 
+	/**
+	 * DEFAULT_IMAGE_SIZE
+	 */
+	public static final int DEFAULT_IMAGE_SIZE = 32;
+
 	private AvatarStore store = AvatarPlugin.getDefault().getAvatars();
 
 	private ColumnViewer viewer;
+	private int imageSize = DEFAULT_IMAGE_SIZE;
 
 	/**
 	 * Create avatar label provider for viewer
@@ -29,6 +35,17 @@ public class AvatarLabelProvider extends LabelProvider implements
 	}
 
 	/**
+	 * Set image size
+	 * 
+	 * @param size
+	 * @return this label provider
+	 */
+	public AvatarLabelProvider setImageSize(int size) {
+		this.imageSize = Math.max(1, size);
+		return this;
+	}
+
+	/**
 	 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
 	 */
 	public Image getImage(final Object element) {
@@ -36,7 +53,7 @@ public class AvatarLabelProvider extends LabelProvider implements
 		String hash = this.store.getHash(element.toString());
 		Avatar avatar = this.store.getAvatarByHash(hash);
 		if (avatar != null) {
-			scaled = avatar.getScaledImage(32);
+			scaled = avatar.getScaledImage(this.imageSize);
 		} else {
 			store.loadAvatarByHash(hash, new AvatarCallbackAdapter() {
 
