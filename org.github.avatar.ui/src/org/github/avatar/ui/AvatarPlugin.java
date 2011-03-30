@@ -30,6 +30,17 @@ public class AvatarPlugin extends AbstractUIPlugin {
 	 */
 	public static final String STORE_NAME = "avatars.store"; //$NON-NLS-1$
 
+	/**
+	 * Create error status
+	 * 
+	 * @param message
+	 * @param throwable
+	 * @return status
+	 */
+	public static IStatus createErrorStatus(String message, Throwable throwable) {
+		return new Status(IStatus.ERROR, PLUGIN_ID, message, throwable);
+	}
+
 	// The shared instance
 	private static AvatarPlugin plugin;
 
@@ -59,23 +70,31 @@ public class AvatarPlugin extends AbstractUIPlugin {
 		IPath location = Platform.getStateLocation(context.getBundle());
 		File store = location.append(STORE_NAME).toFile();
 		if (store != null && store.exists()) {
+			ObjectInputStream stream = null;
 			try {
-				ObjectInputStream stream = new ObjectInputStream(
-						new FileInputStream(store));
+				stream = new ObjectInputStream(new FileInputStream(store));
 				this.store = (AvatarStore) stream.readObject();
 			} catch (IOException e) {
-				getLog().log(
-						new Status(IStatus.ERROR, PLUGIN_ID,
-								"Exception loading avatar store", e)); //$NON-NLS-1$
+				log(Messages.AvatarPlugin_ExceptionLoadingStore, e);
 			} catch (ClassNotFoundException cnfe) {
-				getLog().log(
-						new Status(IStatus.ERROR, PLUGIN_ID,
-								"Exception loading avatar store", cnfe)); //$NON-NLS-1$
+				log(Messages.AvatarPlugin_ExceptionLoadingStore, cnfe);
+			} finally {
+				if (stream != null) {
+					try {
+						stream.close();
+					} catch (IOException ignore) {
+					}
+				}
 			}
 		}
 		if (this.store == null) {
 			this.store = new AvatarStore();
 		}
+	}
+
+	private void log(String message, Throwable throwable) {
+		IStatus status = createErrorStatus(message, throwable);
+		getLog().log(status);
 	}
 
 	/**
@@ -88,14 +107,19 @@ public class AvatarPlugin extends AbstractUIPlugin {
 		IPath location = Platform.getStateLocation(context.getBundle());
 		File store = location.append(STORE_NAME).toFile();
 		if (store != null) {
+			ObjectOutputStream stream = null;
 			try {
-				ObjectOutputStream stream = new ObjectOutputStream(
-						new FileOutputStream(store));
+				stream = new ObjectOutputStream(new FileOutputStream(store));
 				stream.writeObject(this.store);
 			} catch (IOException e) {
-				getLog().log(
-						new Status(IStatus.ERROR, PLUGIN_ID,
-								"Exception saving avatar store", e)); //$NON-NLS-1$
+				log(Messages.AvatarPlugin_ExceptionSavingStore, e);
+			} finally {
+				if (stream != null) {
+					try {
+						stream.close();
+					} catch (IOException ignore) {
+					}
+				}
 			}
 		}
 		this.store.dispose();
