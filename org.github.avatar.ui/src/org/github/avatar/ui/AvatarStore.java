@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -63,6 +64,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	 */
 	public static final Charset CHARSET = Charset.forName("CP1252"); //$NON-NLS-1$
 
+	private long lastRefresh = 0L;
 	private String url;
 	private Map<String, Avatar> avatars;
 
@@ -90,6 +92,15 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	}
 
 	/**
+	 * Get last refresh time of store
+	 * 
+	 * @return local refresh time
+	 */
+	public long getRefreshTime() {
+		return this.lastRefresh;
+	}
+
+	/**
 	 * Does this store contain the specified avatar for the hash
 	 * 
 	 * @param hash
@@ -100,14 +111,46 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	}
 
 	/**
-	 * Dispose of all avatars in store
+	 * Schedule refresh of avatars
 	 */
-	public void dispose() {
-		synchronized (this.avatars) {
-			for (Avatar avatar : this.avatars.values()) {
-				avatar.dispose();
+	public void scheduleRefresh() {
+		Job refresh = new Job("Refreshing avatars") {
+
+			protected IStatus run(IProgressMonitor monitor) {
+				refresh(monitor);
+				return Status.OK_STATUS;
 			}
+		};
+		refresh.setRule(this);
+		refresh.schedule();
+	}
+
+	/**
+	 * Refresh all avatars currently in the store
+	 * 
+	 * @param monitor
+	 */
+	public void refresh(IProgressMonitor monitor) {
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
 		}
+		String[] entries = null;
+		synchronized (this.avatars) {
+			entries = new String[this.avatars.size()];
+			entries = this.avatars.keySet().toArray(entries);
+		}
+		monitor.beginTask("", entries.length);
+		for (String entry : entries) {
+			monitor.setTaskName(MessageFormat.format(
+					Messages.AvatarStore_LoadingAvatar, entry));
+			try {
+				loadAvatarByHash(entry);
+			} catch (IOException ignore) {
+			}
+			monitor.worked(1);
+		}
+		monitor.done();
+		this.lastRefresh = System.currentTimeMillis();
 	}
 
 	/**

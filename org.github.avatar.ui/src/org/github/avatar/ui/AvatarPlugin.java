@@ -122,7 +122,6 @@ public class AvatarPlugin extends AbstractUIPlugin {
 				}
 			}
 		}
-		this.store.dispose();
 	}
 
 	/**

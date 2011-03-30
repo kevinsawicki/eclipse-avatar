@@ -15,6 +15,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -30,7 +31,6 @@ public class Avatar implements Serializable {
 	private String id;
 	private long updateTime;
 	private transient ImageData data;
-	private transient Image image;
 
 	/**
 	 * Create avatar
@@ -123,28 +123,6 @@ public class Avatar implements Serializable {
 	}
 
 	/**
-	 * Get avatar image.
-	 * 
-	 * @return image
-	 */
-	public Image getImage() {
-		if (this.image == null || this.image.isDisposed()) {
-			this.image = new Image(PlatformUI.getWorkbench().getDisplay(),
-					this.data);
-		}
-		return this.image;
-	}
-
-	/**
-	 * Dispose current image
-	 */
-	public void dispose() {
-		if (this.image != null) {
-			this.image.dispose();
-		}
-	}
-
-	/**
 	 * Get avatar image scaled to specified size. The returned image should be
 	 * managed and properly disposed by the caller.
 	 * 
@@ -152,19 +130,26 @@ public class Avatar implements Serializable {
 	 * @return scaled image
 	 */
 	public Image getScaledImage(int size) {
-		Image image = getImage();
-		Image scaled = new Image(PlatformUI.getWorkbench().getDisplay(), size,
-				size);
+		Display display = PlatformUI.getWorkbench().getDisplay();
+		Image image = new Image(display, this.data);
+		Rectangle sourceBounds = image.getBounds();
+
+		// Return original image and don't scale if size matches request
+		if (sourceBounds.width == size) {
+			return image;
+		}
+
+		Image scaled = new Image(display, size, size);
 		GC gc = new GC(scaled);
 		try {
 			gc.setAntialias(SWT.ON);
 			gc.setInterpolation(SWT.HIGH);
-			Rectangle sourceBounds = image.getBounds();
 			Rectangle targetBounds = scaled.getBounds();
 			gc.drawImage(image, 0, 0, sourceBounds.width, sourceBounds.height,
 					0, 0, targetBounds.width, targetBounds.height);
 		} finally {
 			gc.dispose();
+			image.dispose();
 		}
 		return scaled;
 	}
