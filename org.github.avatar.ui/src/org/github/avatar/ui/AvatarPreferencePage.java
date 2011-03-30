@@ -43,7 +43,7 @@ public class AvatarPreferencePage extends PreferencePage implements
 				.applyTo(displayArea);
 
 		Button refreshButton = new Button(displayArea, SWT.PUSH);
-		refreshButton.setText("Refresh avatars images");
+		refreshButton.setText(Messages.AvatarPreferencePage_RefreshAvatarsText);
 		refreshButton.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {

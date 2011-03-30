@@ -114,7 +114,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	 * Schedule refresh of avatars
 	 */
 	public void scheduleRefresh() {
-		Job refresh = new Job("Refreshing avatars") {
+		Job refresh = new Job(Messages.AvatarStore_RefreshJobName) {
 
 			protected IStatus run(IProgressMonitor monitor) {
 				refresh(monitor);
@@ -139,7 +139,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 			entries = new String[this.avatars.size()];
 			entries = this.avatars.keySet().toArray(entries);
 		}
-		monitor.beginTask("", entries.length);
+		monitor.beginTask("", entries.length); //$NON-NLS-1$
 		for (String entry : entries) {
 			monitor.setTaskName(MessageFormat.format(
 					Messages.AvatarStore_LoadingAvatar, entry));

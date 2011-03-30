@@ -23,9 +23,19 @@ public class Messages extends NLS {
 	public static String AvatarPlugin_ExceptionSavingStore;
 
 	/**
+	 * AvatarPreferencePage_RefreshAvatarsText
+	 */
+	public static String AvatarPreferencePage_RefreshAvatarsText;
+
+	/**
 	 * AvatarStore_LoadingAvatar
 	 */
 	public static String AvatarStore_LoadingAvatar;
+
+	/**
+	 * AvatarStore_RefreshJobName
+	 */
+	public static String AvatarStore_RefreshJobName;
 
 	static {
 		// initialize resource bundle

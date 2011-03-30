@@ -25,7 +25,7 @@ public class AvatarDisplayCallback extends AvatarCallbackAdapter {
 	 * @param callback
 	 */
 	public AvatarDisplayCallback(IAvatarCallback callback) {
-		Assert.isNotNull(callback, "Callback cannot be null");
+		Assert.isNotNull(callback, "Callback cannot be null"); //$NON-NLS-1$
 		this.wrapped = callback;
 	}
 
