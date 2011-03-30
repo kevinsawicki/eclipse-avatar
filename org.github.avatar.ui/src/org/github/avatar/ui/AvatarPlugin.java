@@ -28,7 +28,7 @@ public class AvatarPlugin extends AbstractUIPlugin {
 	/**
 	 * STORE_NAME
 	 */
-	public static final String STORE_NAME = "avatars.store"; //$NON-NLS-1$
+	public static final String STORE_NAME = "avatars.ser"; //$NON-NLS-1$
 
 	/**
 	 * Create error status
