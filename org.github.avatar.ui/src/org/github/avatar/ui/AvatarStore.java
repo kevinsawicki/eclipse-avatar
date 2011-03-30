@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -43,6 +44,11 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	public static final int HASH_LENGTH = 32;
 
 	/**
+	 * HASH_ALGORITHM
+	 */
+	public static final String HASH_ALGORITHM = "MD5"; //$NON-NLS-1$
+
+	/**
 	 * TIMEOUT
 	 */
 	public static final int TIMEOUT = 30 * 1000;
@@ -57,12 +63,28 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	 */
 	public static final Charset CHARSET = Charset.forName("CP1252"); //$NON-NLS-1$
 
+	private String url;
 	private Map<String, Avatar> avatars;
 
 	/**
 	 * Create avatar store
 	 */
 	public AvatarStore() {
+		this(URL);
+	}
+
+	/**
+	 * Create avatar store
+	 * 
+	 * @param url
+	 */
+	public AvatarStore(String url) {
+		Assert.isNotNull(url, "Url cannot be null"); //$NON-NLS-1$
+		// Ensure trailing slash
+		if (!url.endsWith("/")) { //$NON-NLS-1$
+			url += "/"; //$NON-NLS-1$
+		}
+		this.url = url;
 		this.avatars = Collections
 				.synchronizedMap(new HashMap<String, Avatar>());
 	}
@@ -150,7 +172,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 			return null;
 		}
 		Avatar avatar = null;
-		URLConnection connection = new URL(URL + hash).openConnection();
+		URLConnection connection = new URL(this.url + hash).openConnection();
 		connection.setConnectTimeout(TIMEOUT);
 		ImageLoader loader = new ImageLoader();
 		ImageData[] images = loader.load(connection.getInputStream());
@@ -185,7 +207,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	private String digest(String value) {
 		String hashed = null;
 		try {
-			byte[] digested = MessageDigest.getInstance("MD5").digest( //$NON-NLS-1$
+			byte[] digested = MessageDigest.getInstance(HASH_ALGORITHM).digest(
 					value.getBytes(CHARSET));
 			hashed = new BigInteger(1, digested).toString(16);
 			int padding = HASH_LENGTH - hashed.length();
