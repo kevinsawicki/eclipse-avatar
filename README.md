@@ -9,7 +9,7 @@ that can be used directly to get Image/ImageData instances for a specific hash o
 This plug-in also contains LabelProvider and WorkbenchAdapter classes that provide images for
 objects that can provide a hash.
 
-![Avatar Example](raw/master/docs/avatar-example.png "GitHub view avatar screenshot")
+![Avatar Example](docs/avatar-example.png "GitHub view avatar screenshot")
 
 Fetching an avatar from the plug-in store
 ------
