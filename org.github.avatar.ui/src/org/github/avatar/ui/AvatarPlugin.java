@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
 /**
  * Avatar plug-in that contains a persistent {@link AvatarStore} instance
@@ -45,6 +46,7 @@ public class AvatarPlugin extends AbstractUIPlugin {
 	private static AvatarPlugin plugin;
 
 	private AvatarStore store;
+	private ServiceRegistration storeRegistration;
 
 	/**
 	 * The constructor
@@ -90,6 +92,8 @@ public class AvatarPlugin extends AbstractUIPlugin {
 		if (this.store == null) {
 			this.store = new AvatarStore();
 		}
+		this.storeRegistration = context.registerService(
+				IAvatarStore.class.getName(), this.store, null);
 	}
 
 	private void log(String message, Throwable throwable) {
@@ -104,6 +108,12 @@ public class AvatarPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
+		
+		if (this.storeRegistration != null) {
+			this.storeRegistration.unregister();
+			this.storeRegistration = null;
+		}
+		
 		IPath location = Platform.getStateLocation(context.getBundle());
 		File store = location.append(STORE_NAME).toFile();
 		if (store != null) {

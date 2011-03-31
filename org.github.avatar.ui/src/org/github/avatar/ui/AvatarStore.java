@@ -32,7 +32,7 @@ import org.eclipse.swt.graphics.ImageLoader;
 /**
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class AvatarStore implements Serializable, ISchedulingRule {
+public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore {
 
 	/**
 	 * URL
@@ -92,28 +92,23 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	}
 
 	/**
-	 * Get last refresh time of store
-	 * 
-	 * @return local refresh time
+	 * @see org.github.avatar.ui.IAvatarStore#getRefreshTime()
 	 */
 	public long getRefreshTime() {
 		return this.lastRefresh;
 	}
 
 	/**
-	 * Does this store contain the specified avatar for the hash
-	 * 
-	 * @param hash
-	 * @return true if store contains avatar, false otherwise
+	 * @see org.github.avatar.ui.IAvatarStore#containsAvatar(java.lang.String)
 	 */
 	public boolean containsAvatar(String hash) {
 		return hash != null ? this.avatars.containsKey(hash) : false;
 	}
 
 	/**
-	 * Schedule refresh of avatars
+	 * @see org.github.avatar.ui.IAvatarStore#scheduleRefresh()
 	 */
-	public void scheduleRefresh() {
+	public IAvatarStore scheduleRefresh() {
 		Job refresh = new Job(Messages.AvatarStore_RefreshJobName) {
 
 			protected IStatus run(IProgressMonitor monitor) {
@@ -123,14 +118,13 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 		};
 		refresh.setRule(this);
 		refresh.schedule();
+		return this;
 	}
 
 	/**
-	 * Refresh all avatars currently in the store
-	 * 
-	 * @param monitor
+	 * @see org.github.avatar.ui.IAvatarStore#refresh(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void refresh(IProgressMonitor monitor) {
+	public IAvatarStore refresh(IProgressMonitor monitor) {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
@@ -151,6 +145,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 		}
 		monitor.done();
 		this.lastRefresh = System.currentTimeMillis();
+		return this;
 	}
 
 	/**
@@ -164,12 +159,10 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	}
 
 	/**
-	 * Get avatar by hash
-	 * 
-	 * @param hash
-	 * @param callback
+	 * @see org.github.avatar.ui.IAvatarStore#loadAvatarByHash(java.lang.String,
+	 *      org.github.avatar.ui.IAvatarCallback)
 	 */
-	public void loadAvatarByHash(final String hash,
+	public IAvatarStore loadAvatarByHash(final String hash,
 			final IAvatarCallback callback) {
 		String title = MessageFormat.format(Messages.AvatarStore_LoadingAvatar,
 				hash);
@@ -191,24 +184,20 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 		};
 		job.setRule(this);
 		job.schedule();
+		return this;
 	}
 
 	/**
-	 * Get avatar by email
-	 * 
-	 * @param email
-	 * @param callback
+	 * @see org.github.avatar.ui.IAvatarStore#loadAvatarByEmail(java.lang.String,
+	 *      org.github.avatar.ui.IAvatarCallback)
 	 */
-	public void loadAvatarByEmail(String email, IAvatarCallback callback) {
+	public IAvatarStore loadAvatarByEmail(String email, IAvatarCallback callback) {
 		loadAvatarByHash(getHash(email), callback);
+		return this;
 	}
 
 	/**
-	 * Load latest avatar by specified hash
-	 * 
-	 * @param hash
-	 * @return avatar or null if load fails
-	 * @throws IOException
+	 * @see org.github.avatar.ui.IAvatarStore#loadAvatarByHash(java.lang.String)
 	 */
 	public Avatar loadAvatarByHash(String hash) throws IOException {
 		if (!isValidHash(hash)) {
@@ -227,21 +216,14 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	}
 
 	/**
-	 * Load latest avatar for specified e-mail address
-	 * 
-	 * @param email
-	 * @return avatar or null if load fails
-	 * @throws IOException
+	 * @see org.github.avatar.ui.IAvatarStore#loadAvatarByEmail(java.lang.String)
 	 */
 	public Avatar loadAvatarByEmail(String email) throws IOException {
 		return loadAvatarByHash(getHash(email));
 	}
 
 	/**
-	 * Get cached avatar by hash
-	 * 
-	 * @param hash
-	 * @return avatar or null if not in cache
+	 * @see org.github.avatar.ui.IAvatarStore#getAvatarByHash(java.lang.String)
 	 */
 	public Avatar getAvatarByHash(String hash) {
 		return hash != null ? this.avatars.get(hash) : null;
@@ -302,10 +284,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	}
 
 	/**
-	 * Get cached avatar by e-mail address
-	 * 
-	 * @param email
-	 * @return avatar or null if not in cache
+	 * @see org.github.avatar.ui.IAvatarStore#getAvatarByEmail(java.lang.String)
 	 */
 	public Avatar getAvatarByEmail(String email) {
 		return getAvatarByHash(getHash(email));
