@@ -31,3 +31,7 @@ Creating a table viewer with Gravatar images
     viewer.setLabelProvider(new AvatarLabelProvider(viewer));
     //Replace with a valid e-mail address
     viewer.setInput(new Object[] { "name@example.com" });
+
+Other
+------
+[Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html)
