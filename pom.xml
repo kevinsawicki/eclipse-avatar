@@ -6,6 +6,15 @@
   <artifactId>eclipse-avatar</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <description>Fetches and stores Gravatar images to be used in Eclipse widgets and viewers.</description>
+  <url>https://github.com/kevinsawicki/eclipse-avatar</url>
+  <developers>
+    <developer>
+      <name>Kevin Sawicki</name>
+      <email>kevin@github.com</email>
+      <url>https://github.com/kevinsawicki</url>
+    </developer>
+  </developers>
   <modules>
     <module>org.github.avatar.ui</module>
   </modules>

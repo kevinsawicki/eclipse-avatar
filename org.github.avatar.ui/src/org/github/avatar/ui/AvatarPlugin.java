@@ -1,3 +1,11 @@
+/*******************************************************************************
+ *  Copyright (c) 2011 Kevin Sawicki
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *  
+ *******************************************************************************/
 package org.github.avatar.ui;
 
 import java.io.File;
@@ -108,12 +116,12 @@ public class AvatarPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
-		
+
 		if (this.storeRegistration != null) {
 			this.storeRegistration.unregister();
 			this.storeRegistration = null;
 		}
-		
+
 		IPath location = Platform.getStateLocation(context.getBundle());
 		File store = location.append(STORE_NAME).toFile();
 		if (store != null) {
