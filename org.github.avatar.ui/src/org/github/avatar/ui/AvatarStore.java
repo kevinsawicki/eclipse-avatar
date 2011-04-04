@@ -8,7 +8,9 @@
  *******************************************************************************/
 package org.github.avatar.ui;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.URL;
@@ -31,8 +33,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
 
 /**
  * @author Kevin Sawicki (kevin@github.com)
@@ -58,6 +58,11 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 	 * TIMEOUT
 	 */
 	public static final int TIMEOUT = 30 * 1000;
+
+	/**
+	 * BUFFER_SIZE
+	 */
+	public static final int BUFFER_SIZE = 8192;
 
 	/**
 	 * serialVersionUID
@@ -211,12 +216,29 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 		Avatar avatar = null;
 		URLConnection connection = new URL(this.url + hash).openConnection();
 		connection.setConnectTimeout(TIMEOUT);
-		ImageLoader loader = new ImageLoader();
-		ImageData[] images = loader.load(connection.getInputStream());
-		if (images.length > 0) {
-			avatar = new Avatar(hash, System.currentTimeMillis(), images[0]);
-			this.avatars.put(hash, avatar);
+
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		InputStream input = connection.getInputStream();
+		try {
+			byte[] buffer = new byte[BUFFER_SIZE];
+			int read = input.read(buffer);
+			while (read != -1) {
+				output.write(buffer, 0, read);
+				read = input.read(buffer);
+			}
+		} finally {
+			try {
+				input.close();
+			} catch (IOException ignore) {
+			}
+			try {
+				output.close();
+			} catch (IOException ignore) {
+			}
 		}
+		avatar = new Avatar(hash, System.currentTimeMillis(),
+				output.toByteArray());
+		this.avatars.put(hash, avatar);
 		return avatar;
 	}
 

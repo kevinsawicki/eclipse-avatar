@@ -8,12 +8,12 @@
  *******************************************************************************/
 package org.github.avatar.ui;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -35,6 +35,7 @@ public class Avatar implements Serializable {
 
 	private String id;
 	private long updateTime;
+	private byte[] bytes;
 	private transient ImageData data;
 
 	/**
@@ -42,14 +43,14 @@ public class Avatar implements Serializable {
 	 * 
 	 * @param id
 	 * @param updateTime
-	 * @param data
+	 * @param bytes
 	 */
-	public Avatar(String id, long updateTime, ImageData data) {
+	public Avatar(String id, long updateTime, byte[] bytes) {
 		Assert.isNotNull(id, "Id cannot be null"); //$NON-NLS-1$
-		Assert.isNotNull(data, "Image data cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(bytes, "Bytes cannot be null"); //$NON-NLS-1$
 		this.id = id;
 		this.updateTime = updateTime;
-		this.data = data;
+		this.bytes = bytes;
 	}
 
 	/**
@@ -79,27 +80,6 @@ public class Avatar implements Serializable {
 		return this.id;
 	}
 
-	private void readObject(ObjectInputStream stream) throws IOException,
-			ClassNotFoundException {
-		stream.defaultReadObject();
-
-		ImageLoader loader = new ImageLoader();
-		ImageData[] images = loader.load(stream);
-		if (images.length == 0) {
-			throw new IOException(
-					"No image data loaded from object input stream"); //$NON-NLS-1$
-		}
-		this.data = images[0];
-	}
-
-	private void writeObject(ObjectOutputStream stream) throws IOException {
-		stream.defaultWriteObject();
-
-		ImageLoader loader = new ImageLoader();
-		loader.data = new ImageData[] { this.data };
-		loader.save(stream, SWT.IMAGE_JPEG);
-	}
-
 	/**
 	 * Get avatar id
 	 * 
@@ -124,6 +104,23 @@ public class Avatar implements Serializable {
 	 * @return image data
 	 */
 	public ImageData getData() {
+		if (this.data == null) {
+			ByteArrayInputStream stream = new ByteArrayInputStream(this.bytes);
+			try {
+				ImageData[] images = new ImageLoader().load(stream);
+				if (images.length > 0) {
+					this.data = images[0];
+				} else {
+					this.data = ImageDescriptor.getMissingImageDescriptor()
+							.getImageData();
+				}
+			} finally {
+				try {
+					stream.close();
+				} catch (IOException ignore) {
+				}
+			}
+		}
 		return this.data;
 	}
 
@@ -136,7 +133,7 @@ public class Avatar implements Serializable {
 	 */
 	public Image getScaledImage(int size) {
 		Display display = PlatformUI.getWorkbench().getDisplay();
-		Image image = new Image(display, this.data);
+		Image image = new Image(display, getData());
 		Rectangle sourceBounds = image.getBounds();
 
 		// Return original image and don't scale if size matches request
