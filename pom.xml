@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.github</groupId>
   <artifactId>eclipse-avatar</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <description>Fetches and stores Gravatar images to be used in Eclipse widgets and viewers.</description>
   <url>https://github.com/kevinsawicki/eclipse-avatar</url>

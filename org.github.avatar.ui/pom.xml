@@ -6,10 +6,8 @@
 	<parent>
 		<artifactId>eclipse-avatar</artifactId>
 		<groupId>org.github</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<groupId>org.github</groupId>
 	<artifactId>org.github.avatar.ui</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 </project>
