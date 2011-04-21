@@ -56,7 +56,7 @@ public class AvatarLabelProvider extends LabelProvider implements
 	 */
 	public Image getImage(final Object element) {
 		Image scaled = null;
-		String hash = this.store.getHash(element.toString());
+		String hash = this.store.getAdaptedHash(element);
 		Avatar avatar = this.store.getAvatarByHash(hash);
 		if (avatar != null)
 			scaled = avatar.getScaledImage(this.imageSize);

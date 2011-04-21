@@ -12,6 +12,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.WorkbenchAdapter;
 
 /**
+ * Avatar workbench adapter for providing an image descriptor for object that
+ * can adapt to an avatar hash.
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class AvatarWorkbenchAdapter extends WorkbenchAdapter {
