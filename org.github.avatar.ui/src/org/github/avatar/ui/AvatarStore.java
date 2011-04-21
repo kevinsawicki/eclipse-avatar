@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
@@ -43,6 +44,16 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 	 * URL
 	 */
 	public static final String URL = "http://www.gravatar.com/avatar/"; //$NON-NLS-1$
+
+	/**
+	 * HASH_REGEX
+	 */
+	public static final String HASH_REGEX = "[0-9a-f]{32}"; //$NON-NLS-1$
+
+	/**
+	 * HASH_PATTERN
+	 */
+	public static final Pattern HASH_PATTERN = Pattern.compile(HASH_REGEX); //$NON-NLS-1$
 
 	/**
 	 * HASH_LENGTH
@@ -164,7 +175,8 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 	 * @return true if valid hash, false otherwise
 	 */
 	public boolean isValidHash(String hash) {
-		return hash != null && hash.length() == HASH_LENGTH;
+		return hash != null && hash.length() == HASH_LENGTH
+				&& HASH_PATTERN.matcher(hash).matches();
 	}
 
 	/**
@@ -207,9 +219,9 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 	 * @see org.github.avatar.ui.IAvatarStore#loadAvatarByHash(java.lang.String)
 	 */
 	public Avatar loadAvatarByHash(String hash) throws IOException {
-		if (!isValidHash(hash)) {
+		if (!isValidHash(hash))
 			return null;
-		}
+
 		Avatar avatar = null;
 		URLConnection connection = new URL(this.url + hash).openConnection();
 		connection.setConnectTimeout(TIMEOUT);
@@ -300,7 +312,13 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 		else if (element instanceof IAdaptable)
 			provider = (IAvatarHashProvider) ((IAdaptable) element)
 					.getAdapter(IAvatarHashProvider.class);
-		return provider != null ? provider.getAvatarHash() : element.toString();
+		if (provider != null)
+			return provider.getAvatarHash();
+		else {
+			String potentialHash = element.toString();
+			return isValidHash(potentialHash) ? potentialHash
+					: getHash(potentialHash);
+		}
 	}
 
 	/**
