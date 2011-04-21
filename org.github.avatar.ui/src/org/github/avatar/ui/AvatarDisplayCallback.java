@@ -47,11 +47,10 @@ public class AvatarDisplayCallback extends AvatarCallbackAdapter {
 
 	private void displayExec(Runnable runnable) {
 		Display display = PlatformUI.getWorkbench().getDisplay();
-		if (this.async) {
+		if (this.async)
 			display.asyncExec(runnable);
-		} else {
+		else
 			display.syncExec(runnable);
-		}
 	}
 
 	/**

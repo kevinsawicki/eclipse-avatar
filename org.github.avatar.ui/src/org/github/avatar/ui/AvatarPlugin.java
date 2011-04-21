@@ -89,17 +89,15 @@ public class AvatarPlugin extends AbstractUIPlugin {
 			} catch (ClassNotFoundException cnfe) {
 				log(Messages.AvatarPlugin_ExceptionLoadingStore, cnfe);
 			} finally {
-				if (stream != null) {
+				if (stream != null)
 					try {
 						stream.close();
 					} catch (IOException ignore) {
 					}
-				}
 			}
 		}
-		if (this.store == null) {
+		if (this.store == null)
 			this.store = new AvatarStore();
-		}
 		this.storeRegistration = context.registerService(
 				IAvatarStore.class.getName(), this.store, null);
 	}
@@ -132,12 +130,11 @@ public class AvatarPlugin extends AbstractUIPlugin {
 			} catch (IOException e) {
 				log(Messages.AvatarPlugin_ExceptionSavingStore, e);
 			} finally {
-				if (stream != null) {
+				if (stream != null)
 					try {
 						stream.close();
 					} catch (IOException ignore) {
 					}
-				}
 			}
 		}
 	}

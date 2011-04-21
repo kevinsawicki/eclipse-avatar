@@ -15,6 +15,7 @@ import java.io.Serializable;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -24,6 +25,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
+ * Avatar class containing id and image data.
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class Avatar implements Serializable {
@@ -64,12 +67,10 @@ public class Avatar implements Serializable {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
-		if (obj == this) {
+		if (obj == this)
 			return true;
-		} else if (obj instanceof Avatar) {
-			Avatar avatar = (Avatar) obj;
-			return getId().equals(avatar.getId());
-		}
+		else if (obj instanceof Avatar)
+			return getId().equals(((Avatar) obj).getId());
 		return false;
 	}
 
@@ -108,12 +109,14 @@ public class Avatar implements Serializable {
 			ByteArrayInputStream stream = new ByteArrayInputStream(this.bytes);
 			try {
 				ImageData[] images = new ImageLoader().load(stream);
-				if (images.length > 0) {
+				if (images.length > 0)
 					this.data = images[0];
-				} else {
+				else
 					this.data = ImageDescriptor.getMissingImageDescriptor()
 							.getImageData();
-				}
+			} catch (SWTException exception) {
+				this.data = ImageDescriptor.getMissingImageDescriptor()
+						.getImageData();
 			} finally {
 				try {
 					stream.close();
@@ -137,9 +140,8 @@ public class Avatar implements Serializable {
 		Rectangle sourceBounds = image.getBounds();
 
 		// Return original image and don't scale if size matches request
-		if (sourceBounds.width == size) {
+		if (sourceBounds.width == size)
 			return image;
-		}
 
 		Image scaled = new Image(display, size, size);
 		GC gc = new GC(scaled);

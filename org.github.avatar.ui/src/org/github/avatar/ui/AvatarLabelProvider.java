@@ -12,9 +12,10 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.PlatformUI;
 
 /**
+ * Avatar label provider class.
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class AvatarLabelProvider extends LabelProvider implements
@@ -57,25 +58,18 @@ public class AvatarLabelProvider extends LabelProvider implements
 		Image scaled = null;
 		String hash = this.store.getHash(element.toString());
 		Avatar avatar = this.store.getAvatarByHash(hash);
-		if (avatar != null) {
+		if (avatar != null)
 			scaled = avatar.getScaledImage(this.imageSize);
-		} else {
-			store.loadAvatarByHash(hash, new AvatarCallbackAdapter() {
+		else
+			store.loadAvatarByHash(hash, new AvatarDisplayCallback(
+					new AvatarCallbackAdapter() {
 
-				public void loaded(Avatar avatar) {
-					PlatformUI.getWorkbench().getDisplay()
-							.asyncExec(new Runnable() {
+						public void loaded(Avatar avatar) {
+							if (!viewer.getControl().isDisposed())
+								viewer.refresh(element);
+						}
 
-								public void run() {
-									if (!viewer.getControl().isDisposed()) {
-										viewer.refresh(element);
-									}
-								}
-							});
-				}
-
-			});
-		}
+					}));
 		return scaled;
 	}
 
@@ -84,10 +78,7 @@ public class AvatarLabelProvider extends LabelProvider implements
 	 *      int)
 	 */
 	public Image getColumnImage(Object element, int columnIndex) {
-		if (columnIndex == 0) {
-			return getImage(element);
-		}
-		return null;
+		return columnIndex == 0 ? getImage(element) : null;
 	}
 
 	/**
@@ -95,10 +86,7 @@ public class AvatarLabelProvider extends LabelProvider implements
 	 *      int)
 	 */
 	public String getColumnText(Object element, int columnIndex) {
-		if (columnIndex == 0) {
-			return getText(element);
-		}
-		return ""; //$NON-NLS-1$
+		return columnIndex == 0 ? getText(element) : ""; //$NON-NLS-1$
 	}
 
 }

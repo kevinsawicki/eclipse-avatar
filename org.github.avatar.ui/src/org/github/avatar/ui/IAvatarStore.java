@@ -13,6 +13,8 @@ import java.io.IOException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
+ * Avatar store interface.
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public interface IAvatarStore {

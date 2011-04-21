@@ -9,6 +9,8 @@
 package org.github.avatar.ui;
 
 /**
+ * Callback interface for when gravatar loading completes or fails.
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public interface IAvatarCallback {

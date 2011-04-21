@@ -9,6 +9,8 @@
 package org.github.avatar.ui;
 
 /**
+ * Base implementation of {@link IAvatarCallback}
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public abstract class AvatarCallbackAdapter implements IAvatarCallback {

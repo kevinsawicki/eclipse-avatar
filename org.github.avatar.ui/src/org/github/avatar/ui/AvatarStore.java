@@ -93,9 +93,8 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 	public AvatarStore(String url) {
 		Assert.isNotNull(url, "Url cannot be null"); //$NON-NLS-1$
 		// Ensure trailing slash
-		if (!url.endsWith("/")) { //$NON-NLS-1$
+		if (!url.endsWith("/")) //$NON-NLS-1$
 			url += "/"; //$NON-NLS-1$
-		}
 		this.url = url;
 		this.avatars = Collections
 				.synchronizedMap(new HashMap<String, Avatar>());
@@ -181,13 +180,11 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					Avatar avatar = loadAvatarByHash(hash);
-					if (avatar != null && callback != null) {
+					if (avatar != null && callback != null)
 						callback.loaded(avatar);
-					}
 				} catch (IOException e) {
-					if (callback != null) {
+					if (callback != null)
 						callback.error(e);
-					}
 				}
 				return Status.OK_STATUS;
 			}
@@ -221,11 +218,9 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 		InputStream input = connection.getInputStream();
 		try {
 			byte[] buffer = new byte[BUFFER_SIZE];
-			int read = input.read(buffer);
-			while (read != -1) {
+			int read = -1;
+			while ((read = input.read(buffer)) != -1)
 				output.write(buffer, 0, read);
-				read = input.read(buffer);
-			}
 		} finally {
 			try {
 				input.close();
@@ -284,9 +279,8 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 		String hash = null;
 		if (email != null) {
 			email = email.trim().toLowerCase(Locale.US);
-			if (email.length() > 0) {
+			if (email.length() > 0)
 				hash = digest(email);
-			}
 		}
 		return hash;
 	}
@@ -301,12 +295,11 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 	 */
 	public String getAdaptedHash(Object element) {
 		IAvatarHashProvider provider = null;
-		if (element instanceof IAvatarHashProvider) {
+		if (element instanceof IAvatarHashProvider)
 			provider = (IAvatarHashProvider) element;
-		} else if (element instanceof IAdaptable) {
+		else if (element instanceof IAdaptable)
 			provider = (IAvatarHashProvider) ((IAdaptable) element)
 					.getAdapter(IAvatarHashProvider.class);
-		}
 		return provider != null ? provider.getAvatarHash() : element.toString();
 	}
 

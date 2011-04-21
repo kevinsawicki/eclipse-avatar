@@ -9,6 +9,8 @@
 package org.github.avatar.ui;
 
 /**
+ * Interface for providing an avatar hash.
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public interface IAvatarHashProvider {
