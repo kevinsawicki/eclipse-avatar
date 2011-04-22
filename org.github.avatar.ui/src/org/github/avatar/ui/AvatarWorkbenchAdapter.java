@@ -26,7 +26,8 @@ public class AvatarWorkbenchAdapter extends WorkbenchAdapter {
 		AvatarStore store = AvatarPlugin.getDefault().getAvatars();
 		String hash = store.getAdaptedHash(object);
 		Avatar avatar = store.getAvatarByHash(hash);
-		return avatar != null ? ImageDescriptor.createFromImageData(avatar
-				.getData()) : super.getImageDescriptor(object);
+		return avatar != null ? ImageDescriptor
+				.createFromImageData(new AvatarImage(avatar).getData()) : super
+				.getImageDescriptor(object);
 	}
 }

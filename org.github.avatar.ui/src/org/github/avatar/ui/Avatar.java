@@ -8,21 +8,9 @@
  *******************************************************************************/
 package org.github.avatar.ui;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.Serializable;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * Avatar class containing id and image data.
@@ -39,7 +27,6 @@ public class Avatar implements Serializable {
 	private String id;
 	private long updateTime;
 	private byte[] bytes;
-	private transient ImageData data;
 
 	/**
 	 * Create avatar
@@ -75,6 +62,17 @@ public class Avatar implements Serializable {
 	}
 
 	/**
+	 * Get avatar image as byte array
+	 * 
+	 * @return non-null byte array
+	 */
+	public byte[] getBytes() {
+		byte[] copy = new byte[this.bytes.length];
+		System.arraycopy(this.bytes, 0, copy, 0, copy.length);
+		return copy;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
@@ -99,62 +97,4 @@ public class Avatar implements Serializable {
 		return this.updateTime;
 	}
 
-	/**
-	 * Get avatar image data
-	 * 
-	 * @return image data
-	 */
-	public ImageData getData() {
-		if (this.data == null) {
-			ByteArrayInputStream stream = new ByteArrayInputStream(this.bytes);
-			try {
-				ImageData[] images = new ImageLoader().load(stream);
-				if (images.length > 0)
-					this.data = images[0];
-				else
-					this.data = ImageDescriptor.getMissingImageDescriptor()
-							.getImageData();
-			} catch (SWTException exception) {
-				this.data = ImageDescriptor.getMissingImageDescriptor()
-						.getImageData();
-			} finally {
-				try {
-					stream.close();
-				} catch (IOException ignore) {
-				}
-			}
-		}
-		return this.data;
-	}
-
-	/**
-	 * Get avatar image scaled to specified size. The returned image should be
-	 * managed and properly disposed by the caller.
-	 * 
-	 * @param size
-	 * @return scaled image
-	 */
-	public Image getScaledImage(int size) {
-		Display display = PlatformUI.getWorkbench().getDisplay();
-		Image image = new Image(display, getData());
-		Rectangle sourceBounds = image.getBounds();
-
-		// Return original image and don't scale if size matches request
-		if (sourceBounds.width == size)
-			return image;
-
-		Image scaled = new Image(display, size, size);
-		GC gc = new GC(scaled);
-		try {
-			gc.setAntialias(SWT.ON);
-			gc.setInterpolation(SWT.HIGH);
-			Rectangle targetBounds = scaled.getBounds();
-			gc.drawImage(image, 0, 0, sourceBounds.width, sourceBounds.height,
-					0, 0, targetBounds.width, targetBounds.height);
-		} finally {
-			gc.dispose();
-			image.dispose();
-		}
-		return scaled;
-	}
 }

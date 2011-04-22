@@ -59,7 +59,7 @@ public class AvatarLabelProvider extends LabelProvider implements
 		String hash = this.store.getAdaptedHash(element);
 		Avatar avatar = this.store.getAvatarByHash(hash);
 		if (avatar != null)
-			scaled = avatar.getScaledImage(this.imageSize);
+			scaled = new AvatarImage(avatar).getScaledImage(this.imageSize);
 		else
 			store.loadAvatarByHash(hash, new AvatarDisplayCallback(
 					new AvatarCallbackAdapter() {
