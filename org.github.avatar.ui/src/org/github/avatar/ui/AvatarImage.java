@@ -11,7 +11,6 @@
 package org.github.avatar.ui;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -51,25 +50,20 @@ public class AvatarImage {
 	 * @return image data
 	 */
 	public ImageData getData() {
-		if (this.data == null) {
-			ByteArrayInputStream stream = new ByteArrayInputStream(
-					avatar.getBytes());
-			try {
-				ImageData[] images = new ImageLoader().load(stream);
-				if (images.length > 0)
-					this.data = images[0];
-				else
-					this.data = ImageDescriptor.getMissingImageDescriptor()
-							.getImageData();
-			} catch (SWTException exception) {
+		if (this.data != null)
+			return this.data;
+
+		try {
+			ImageData[] images = new ImageLoader()
+					.load(new ByteArrayInputStream(avatar.getBytes()));
+			if (images.length > 0)
+				this.data = images[0];
+			else
 				this.data = ImageDescriptor.getMissingImageDescriptor()
 						.getImageData();
-			} finally {
-				try {
-					stream.close();
-				} catch (IOException ignore) {
-				}
-			}
+		} catch (SWTException exception) {
+			this.data = ImageDescriptor.getMissingImageDescriptor()
+					.getImageData();
 		}
 		return this.data;
 	}

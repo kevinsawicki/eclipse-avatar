@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -36,6 +36,8 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 
 /**
+ * Class that loads and stores avatars.
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore {
@@ -223,8 +225,14 @@ public class AvatarStore implements Serializable, ISchedulingRule, IAvatarStore 
 			return null;
 
 		Avatar avatar = null;
-		URLConnection connection = new URL(this.url + hash).openConnection();
+		HttpURLConnection connection = (HttpURLConnection) new URL(this.url
+				+ hash).openConnection();
 		connection.setConnectTimeout(TIMEOUT);
+		connection.setUseCaches(false);
+		connection.connect();
+
+		if (connection.getResponseCode() != 200)
+			return null;
 
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		InputStream input = connection.getInputStream();
