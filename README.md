@@ -15,13 +15,13 @@ Fetching an avatar from the plug-in store
 ------
 
     Avatar avatar = AvatarPlugin.getDefault().getAvatars().loadAvatarByEmail("name@example.com");
-    Image image = avatar.getScaledImage(32);
+    Image image = new AvatarImage(avatar).getScaledImage(32);
 
 Getting a cached avatar from the plug-in store
 ------
 
     Avatar avatar = AvatarPlugin.getDefault().getAvatars().getAvatarByEmail("name@example.com");
-    Image image = avatar.getScaledImage(32);
+    Image image =  new AvatarImage(avatar).getScaledImage(32);
 
 Creating a table viewer with Gravatar images
 ------
