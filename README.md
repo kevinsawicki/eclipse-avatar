@@ -41,3 +41,5 @@ viewer.setInput(new Object[] { "name@example.com" });
 Other
 ------
 [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html)
+
+As of May 14th, 2011 parts of this project have been donated to the [Mylyn](http://www.eclipse.org/mylyn/) Commons Identity API as part of [Bug 343602](https://bugs.eclipse.org/bugs/show_bug.cgi?id=343602).
